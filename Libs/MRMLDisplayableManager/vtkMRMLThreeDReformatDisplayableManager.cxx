@@ -22,11 +22,11 @@
 #include "vtkMRMLThreeDReformatDisplayableManager.h"
 
 // MRML includes
+#include "vtkMRMLApplicationLogic.h"
 #include <vtkMRMLColors.h>
 #include <vtkMRMLSliceCompositeNode.h>
 #include <vtkMRMLSliceNode.h>
 #include <vtkMRMLSliceLogic.h>
-#include <vtkThreeDViewInteractorStyle.h>
 #include <vtkMRMLVolumeNode.h>
 
 // VTK includes
@@ -42,6 +42,7 @@
 #include <vtkProperty.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkThreeDViewInteractorStyle.h>
 #include <vtkTransform.h>
 
 // STD includes
@@ -70,6 +71,9 @@ public:
   void RemoveSliceNode(SliceNodesLink::iterator);
   void UpdateSliceNodes();
   vtkMRMLSliceNode* GetSliceNode(vtkImplicitPlaneWidget2*);
+
+  // SliceLogic
+  vtkMRMLSliceLogic* GetSliceLogic(vtkMRMLSliceNode*);
 
   // Widget
   vtkImplicitPlaneWidget2* NewImplicitPlaneWidget();
@@ -218,6 +222,34 @@ GetSliceNode(vtkImplicitPlaneWidget2* planeWidget)
 }
 
 //---------------------------------------------------------------------------
+vtkMRMLSliceLogic* vtkMRMLThreeDReformatDisplayableManager::vtkInternal::
+GetSliceLogic(vtkMRMLSliceNode* sliceNode)
+{
+  if(!sliceNode)
+    {
+    return 0;
+    }
+
+  vtkMRMLSliceLogic* searchLogic=0;
+  vtkMRMLSliceLogic* logic;
+  vtkCollectionSimpleIterator it;
+  vtkCollection* logics =
+    this->External->GetMRMLApplicationLogic()->GetSliceLogics();
+
+  for (logics->InitTraversal(it);
+      (logic=vtkMRMLSliceLogic::SafeDownCast(logics->GetNextItemAsObject(it)));)
+    {
+    if (logic->GetSliceNode() == sliceNode)
+      {
+      searchLogic = logic;
+      break;
+      }
+    }
+
+  return searchLogic;
+}
+
+//---------------------------------------------------------------------------
 vtkImplicitPlaneWidget2* vtkMRMLThreeDReformatDisplayableManager::vtkInternal::
 NewImplicitPlaneWidget()
 {
@@ -283,7 +315,7 @@ UpdateWidget(vtkMRMLSliceNode* sliceNode, vtkImplicitPlaneWidget2* planeWidget)
     planeWidget->GetImplicitPlaneRepresentation();
   vtkMatrix4x4* sliceToRAS = sliceNode->GetSliceToRAS();
 
-    // Color the Edge of the plane representation depending on the Slice
+  // Color the Edge of the plane representation depending on the Slice
   double color[3];
   if (std::string(sliceNode->GetLayoutName()) == "Red")
     {
@@ -303,7 +335,7 @@ UpdateWidget(vtkMRMLSliceNode* sliceNode, vtkImplicitPlaneWidget2* planeWidget)
     }
   rep->SetEdgeColor(color);
 
-    // Update Bound size
+  // Update Bound size
   vtkMRMLSliceCompositeNode* sliceCompositeNode =
     vtkMRMLSliceLogic::GetSliceCompositeNode(sliceNode);
   vtkMRMLVolumeNode* volumeNode = vtkMRMLVolumeNode::SafeDownCast(
@@ -323,11 +355,11 @@ UpdateWidget(vtkMRMLSliceNode* sliceNode, vtkImplicitPlaneWidget2* planeWidget)
     rep->PlaceWidget(bounds);
     }
 
-    // Update normal
+  // Update normal
   rep->SetNormal(sliceToRAS->GetElement(0,2),
                  sliceToRAS->GetElement(1,2),
                  sliceToRAS->GetElement(2,2));
-    // Update origin position
+  // Update origin position
   rep->SetOrigin(sliceToRAS->GetElement(0,3),
                  sliceToRAS->GetElement(1,3),
                  sliceToRAS->GetElement(2,3));
@@ -381,7 +413,7 @@ OnMRMLSceneNodeAddedEvent(vtkMRMLNode* nodeAdded)
 void vtkMRMLThreeDReformatDisplayableManager::
 OnMRMLSceneNodeRemovedEvent(vtkMRMLNode* nodeRemoved)
 {
-  if (this->GetMRMLScene()->GetIsUpdating() ||
+  if (//this->GetMRMLScene()->GetIsUpdating() ||
       !nodeRemoved->IsA("vtkMRMLSliceNode"))
     {
     return;
@@ -412,7 +444,7 @@ ProcessMRMLEvents(vtkObject *caller, unsigned long event, void *vtkNotUsed(callD
 //----------------------------------------------------------------------------
 void vtkMRMLThreeDReformatDisplayableManager::
 ProcessWidgetEvents(vtkObject *caller,
-                    unsigned long vtkNotUsed(event),
+                    unsigned long event,
                     void *vtkNotUsed(callData))
 {
   vtkImplicitPlaneWidget2* planeWidget =
@@ -426,9 +458,26 @@ ProcessWidgetEvents(vtkObject *caller,
     return;
     }
 
+  // Broadcast transformation in Linked mode --> Mode Update When Interaction done.
+  // Delete the condition !event!=vtkCommand::InteractionEvent above
+  vtkMRMLSliceLogic* sliceLogic = this->Internal->GetSliceLogic(sliceNode);
+  if (event == vtkCommand::StartInteractionEvent && sliceLogic )
+    {
+    sliceLogic->StartSliceNodeInteraction(vtkMRMLSliceNode::MultiplanarReformatFlag);
+    return;
+    }
+  else if (event == vtkCommand::EndInteractionEvent && sliceLogic)
+    {
+    sliceLogic->EndSliceNodeInteraction();
+    return;
+    }
+  else if (planeWidget->GetImplicitPlaneRepresentation()->GetLockNormalToCamera())
+    {
+    sliceLogic->StartSliceNodeInteraction(vtkMRMLSliceNode::MultiplanarReformatFlag);
+    }
+
   double cross[3], dot, rotation;
   vtkTransform* transform = vtkTransform::New();
-
   vtkMatrix4x4* sliceToRAS = sliceNode->GetSliceToRAS();
   double sliceNormal[3] = {sliceToRAS->GetElement(0,2),
                            sliceToRAS->GetElement(1,2),
@@ -442,15 +491,15 @@ ProcessWidgetEvents(vtkObject *caller,
   // Rotate the sliceNode to match the planeWidget normal
   vtkMath::Cross(sliceNormal, rep->GetNormal(), cross);
   dot = vtkMath::Dot(sliceNormal, rep->GetNormal());
-   // Clamp the dot product
+  // Clamp the dot product
   dot = (dot < -1.0) ? -1.0 : (dot > 1.0 ? 1.0 : dot);
   rotation = vtkMath::DegreesFromRadians(acos(dot));
 
-    // Apply the rotation
+  // Apply the rotation
   transform->PostMultiply();
   transform->SetMatrix(sliceToRAS);
   transform->RotateWXYZ(rotation,cross);
-  transform->GetMatrix(sliceToRAS); // Update the changes
+  transform->GetMatrix(sliceToRAS); // Update the changes within sliceToRAS
   transform->Delete();
 
   // Insert the widget translation

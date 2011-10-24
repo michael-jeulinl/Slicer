@@ -89,7 +89,17 @@ private:
   void operator=(const vtkMRMLSliceLinkLogic&);
 
   int BroadcastingEvents;
+
+  struct SliceNodeInfos
+    {
+    double LastNormal[3];
+    int Interacting;
+    };
+
+  typedef std::map<std::string, SliceNodeInfos> SliceNodeStatusMap;
+  SliceNodeStatusMap SliceNodeStatus;
+  void UpdateSliceNodeStatus(vtkMRMLSliceNode*);
+  vtkMRMLSliceCompositeNode* GetCompositeNode(vtkMRMLSliceNode*);
 };
 
 #endif
-

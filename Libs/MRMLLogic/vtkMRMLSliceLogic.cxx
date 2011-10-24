@@ -1820,7 +1820,8 @@ void vtkMRMLSliceLogic::StartSliceNodeInteraction(unsigned int parameters)
 
   // If we have hot linked controls, then we want to broadcast changes
   if (compositeNode && 
-      compositeNode->GetHotLinkedControl() && compositeNode->GetLinkedControl())
+      (compositeNode->GetHotLinkedControl() || parameters == vtkMRMLSliceNode::MultiplanarReformatFlag)
+      && compositeNode->GetLinkedControl())
     {
     if (sliceNode)
       {

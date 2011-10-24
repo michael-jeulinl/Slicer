@@ -1456,9 +1456,17 @@ void qMRMLSliceControllerWidget::setSliceOrientation(const QString& orientation)
     return;
     }
 
-  d->SliceLogic->StartSliceNodeInteraction(vtkMRMLSliceNode::OrientationFlag); 
-  d->MRMLSliceNode->SetOrientation(orientation.toLatin1());
-  d->SliceLogic->EndSliceNodeInteraction();
+  if (orientation != "Reformat")
+    {
+    d->SliceLogic->StartSliceNodeInteraction(vtkMRMLSliceNode::OrientationFlag);
+    d->MRMLSliceNode->SetOrientation(orientation.toLatin1());
+    d->SliceLogic->EndSliceNodeInteraction();
+    }
+  else
+    {
+    d->MRMLSliceNode->SetOrientation(orientation.toLatin1());
+    }
+
 }
 
 //---------------------------------------------------------------------------
