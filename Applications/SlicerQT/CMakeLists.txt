@@ -72,7 +72,7 @@ include_directories(${include_dirs})
 # Build the library
 # --------------------------------------------------------------------------
 
-set(KIT_LIBRARY_NAME "qSlicerQT")
+set(KIT_LIBRARY_NAME "q${PROJECT_NAME}")
 
 add_library(${KIT_LIBRARY_NAME}
   ${SlicerQT_SRCS}
@@ -163,19 +163,19 @@ if(APPLE)
   set(SlicerQT_EXE_OPTIONS MACOSX_BUNDLE)
 endif()
 
-add_executable(SlicerQT${SlicerQT_EXE_SUFFIX}
+add_executable(${PROJECT_NAME}${SlicerQT_EXE_SUFFIX}
   ${SlicerQT_EXE_OPTIONS}
   Main.cxx
   ${apple_bundle_sources}
   ${qt_menu_nib_sources}
   )
-set_target_properties(SlicerQT${SlicerQT_EXE_SUFFIX} PROPERTIES LABELS ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME}${SlicerQT_EXE_SUFFIX} PROPERTIES LABELS ${PROJECT_NAME})
 
 if(APPLE)
-  set_target_properties(SlicerQT${SlicerQT_EXE_SUFFIX} PROPERTIES OUTPUT_NAME Slicer)
+  set_target_properties(${PROJECT_NAME}${SlicerQT_EXE_SUFFIX} PROPERTIES OUTPUT_NAME Slicer)
 endif()
 
-target_link_libraries(SlicerQT${SlicerQT_EXE_SUFFIX}
+target_link_libraries(${PROJECT_NAME}${SlicerQT_EXE_SUFFIX}
   ${KIT_LIBRARY_NAME}
   )
 
@@ -183,8 +183,8 @@ target_link_libraries(SlicerQT${SlicerQT_EXE_SUFFIX}
 # Configure
 # --------------------------------------------------------------------------
 
-set(MY_LIBRARY_EXPORT_DIRECTIVE "Q_SLICERQT_EXPORT")
-set(MY_EXPORT_HEADER_PREFIX ${KIT_LIBRARY_NAME})
+set(MY_LIBRARY_EXPORT_DIRECTIVE "Q_SLICER_APP_EXPORT")
+set(MY_EXPORT_HEADER_PREFIX "qSlicerApp")
 set(MY_LIBNAME ${KIT_LIBRARY_NAME})
 
 configure_file(
@@ -204,7 +204,7 @@ else()
   set(SlicerQT_INSTALL_DESTINATION_ARGS BUNDLE DESTINATION ".")
 endif()
 
-install(TARGETS SlicerQT${SlicerQT_EXE_SUFFIX}
+install(TARGETS ${PROJECT_NAME}${SlicerQT_EXE_SUFFIX}
   ${SlicerQT_INSTALL_DESTINATION_ARGS}
   COMPONENT Runtime)
 
@@ -247,9 +247,9 @@ if(Slicer_USE_CTKAPPLAUNCHER)
   endforeach()
 
   include(SlicerBlockCTKAppLauncherSettings)
-  set(splash_image_path ${Slicer_SOURCE_DIR}/Applications/SlicerQT/Resources/Images/SlicerSplashScreen.png)
+  set(splash_image_path ${Slicer_SOURCE_DIR}/Applications/${PROJECT_NAME}/Resources/Images/SlicerSplashScreen.png)
   ctkAppLauncherConfigure(
-    TARGET SlicerQT${SlicerQT_EXE_SUFFIX}
+    TARGET ${PROJECT_NAME}${SlicerQT_EXE_SUFFIX}
     APPLICATION_INSTALL_SUBDIR ${Slicer_INSTALL_BIN_DIR}
     APPLICATION_NAME Slicer
     SPLASH_IMAGE_PATH ${splash_image_path}
@@ -275,7 +275,7 @@ if(Slicer_USE_CTKAPPLAUNCHER)
       ${Slicer_BINARY_DIR}/SlicerLauncherSettings.ini
       ${Slicer_BINARY_DIR}/SlicerLauncherSettingsToInstall.ini
     )
-  add_dependencies(SlicerRemoveLauncherSettings SlicerQT${SlicerQT_EXE_SUFFIX})
+  add_dependencies(SlicerRemoveLauncherSettings ${PROJECT_NAME}${SlicerQT_EXE_SUFFIX})
   add_dependencies(SlicerConfigureLauncher SlicerRemoveLauncherSettings)
 
   if(NOT APPLE)
