@@ -768,10 +768,17 @@ qMRMLSliceWidget* qMRMLLayoutManager::sliceWidget(const QString& name)const
 }
 
 //------------------------------------------------------------------------------
-QList<qMRMLSliceWidget*> qMRMLLayoutManager::sliceWidgetList() const
+QStringList qMRMLLayoutManager::sliceWidgetNames() const
 {
   Q_D(const qMRMLLayoutManager);
-  return d->SliceWidgetList;
+
+  QStringList sliceWidgetNames;
+  foreach (qMRMLSliceWidget* sliceWidget, d->SliceWidgetList)
+    {
+    sliceWidgetNames.append(sliceWidget->sliceViewName());
+    }
+
+  return sliceWidgetNames;
 }
 
 //------------------------------------------------------------------------------
