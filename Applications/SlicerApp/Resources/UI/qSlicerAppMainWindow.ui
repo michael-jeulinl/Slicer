@@ -14,8 +14,8 @@
    <string>3D Slicer</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../SlicerApp.qrc">
-    <normaloff>:/Icons/Medium/3DSlicer-DesktopIcon.png</normaloff>:/Icons/Medium/3DSlicer-DesktopIcon.png</iconset>
+   <iconset resource="../Application.qrc">
+    <normaloff>:/Icons/Medium/Application-DesktopIcon.png</normaloff>:/Icons/Medium/Application-DesktopIcon.png</iconset>
   </property>
   <widget class="QWidget" name="CentralWidget"/>
   <widget class="QMenuBar" name="menubar">
@@ -1134,7 +1134,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../SlicerApp.qrc"/>
+  <include location="../Application.qrc"/>
   <include location="../../../../Base/QTGUI/Resources/qSlicerBaseQTGUI.qrc"/>
   <include location="../../../../Libs/MRML/Widgets/Resources/qMRMLWidgets.qrc"/>
   <include location="../../../../Resources/qSlicerLogos.qrc"/>

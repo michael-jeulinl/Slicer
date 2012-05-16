@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file>Icons/Small/Application-DesktopIcon.png</file>
+    <file>Icons/Medium/Application-DesktopIcon.png</file>
+    <file>Icons/Large/Application-DesktopIcon.png</file>
+    <file>Icons/XLarge/Application-DesktopIcon.png</file>
+    <file>Images/ApplicationSplashScreen.png</file>
+    <file>Images/ApplicationLogo.png</file>
+  </qresource>
+</RCC>

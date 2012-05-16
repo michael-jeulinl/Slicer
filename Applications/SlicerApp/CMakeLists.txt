@@ -39,7 +39,7 @@ set(SlicerApp_UI_SRCS
 
 # Resources
 set(qt_module_resources
-  Resources/SlicerApp.qrc
+  Resources/Application.qrc
   ${qSlicerBaseQTGUI_SOURCE_DIR}/Resources/qSlicerBaseQTGUI.qrc
   ${qSlicerModulesCore_SOURCE_DIR}/Resources/qSlicerModulesCore.qrc
 )
@@ -98,7 +98,7 @@ target_link_libraries(${KIT_LIBRARY_NAME}
 # --------------------------------------------------------------------------
 
 if(Q_WS_MAC)
-  set(apple_icon_file Slicer.icns)
+  set(apple_icon_file Application.icns)
   set(apple_bundle_sources "${CMAKE_CURRENT_SOURCE_DIR}/Resources/${apple_icon_file}")
   set_source_files_properties(
     "${apple_bundle_sources}"
@@ -245,7 +245,7 @@ if(Slicer_USE_CTKAPPLAUNCHER)
   endforeach()
 
   include(SlicerBlockCTKAppLauncherSettings)
-  set(splash_image_path ${Slicer_SOURCE_DIR}/Applications/${PROJECT_NAME}/Resources/Images/SlicerSplashScreen.png)
+  set(splash_image_path ${Slicer_SOURCE_DIR}/Applications/${PROJECT_NAME}/Resources/Images/ApplicationSplashScreen.png)
   ctkAppLauncherConfigure(
     TARGET ${PROJECT_NAME}${SlicerApp_EXE_SUFFIX}
     APPLICATION_INSTALL_SUBDIR ${Slicer_INSTALL_BIN_DIR}
