@@ -41,7 +41,7 @@ public:
   qSlicerDataDialog(QObject* parent =0);
   virtual ~qSlicerDataDialog();
   
-  virtual qSlicerIO::IOFileType fileType()const;
+  virtual QString fileType()const;
   virtual qSlicerFileDialog::IOAction action()const;
 
   void dropEvent(QDropEvent *event);

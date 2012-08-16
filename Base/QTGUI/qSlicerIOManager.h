@@ -35,9 +35,9 @@ public:
   /// Search for the most appropriate dialog based on the fileType,
   /// and open it.
   /// If no dialog is registered for a given fileType (e.g.
-  /// qSlicerIO::SceneFile), a default dialog (qSlicerStandardFileDialog) is 
+  /// QString("SceneFile")), a default dialog (qSlicerStandardFileDialog) is
   /// used.
-  bool openDialog(qSlicerIO::IOFileType fileType,
+  bool openDialog(QString fileType,
                   qSlicerFileDialog::IOAction action,
                   qSlicerIO::IOProperties ioProperties = qSlicerIO::IOProperties());
 
@@ -55,7 +55,7 @@ public:
   /// There is no way to know in advance how long the loading will take, so the
   /// progress dialog listens to the scene and increment the progress anytime
   /// a node is added.
-  Q_INVOKABLE virtual bool loadNodes(const qSlicerIO::IOFileType& fileType,
+  Q_INVOKABLE virtual bool loadNodes(const QString& fileType,
                                      const qSlicerIO::IOProperties& parameters,
                                      vtkCollection* loadedNodes = 0);
   /// If you have a list of nodes to load, it's best to use this function
@@ -107,19 +107,22 @@ bool qSlicerIOManager::openAddDataDialog(QString fileName)
 {
   qSlicerIO::IOProperties ioProperties;
   ioProperties["fileName"] = fileName;
-  return this->openDialog(qSlicerIO::NoFile, qSlicerFileDialog::Read, ioProperties);
+
+  return this->openDialog(QString("NoFile"),
+                          qSlicerFileDialog::Read,
+                          ioProperties);
 }
 
 //------------------------------------------------------------------------------
 bool qSlicerIOManager::openAddDataDialog()
 {
-  return this->openDialog(qSlicerIO::NoFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("NoFile"), qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddVolumeDialog()
 {
-  return this->openDialog(qSlicerIO::VolumeFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("VolumeFile"), qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
@@ -127,49 +130,53 @@ bool qSlicerIOManager::openAddVolumesDialog()
 {
   qSlicerIO::IOProperties ioProperties;
   ioProperties["multipleFiles"] = true;
-  return this->openDialog(qSlicerIO::VolumeFile, qSlicerFileDialog::Read, ioProperties);
+
+  return this->openDialog(QString("VolumeFile"),
+                          qSlicerFileDialog::Read,
+                          ioProperties);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddModelDialog()
 {
-  return this->openDialog(qSlicerIO::ModelFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("ModelFile"), qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddScalarOverlayDialog()
 {
-  return this->openDialog(qSlicerIO::ScalarOverlayFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("ScalarOverlayFile"),
+                          qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddTransformDialog()
 {
-  return this->openDialog(qSlicerIO::TransformFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("TransformFile"), qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddColorTableDialog()
 {
-  return this->openDialog(qSlicerIO::ColorTableFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("ColorTableFile"), qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddFiducialDialog()
 {
-  return this->openDialog(qSlicerIO::FiducialListFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("FiducialListFile"), qSlicerFileDialog::Read);
 }
 
 //-----------------------------------------------------------------------------
 bool qSlicerIOManager::openAddFiberBundleDialog()
 {
-  return this->openDialog(qSlicerIO::FiberBundleFile, qSlicerFileDialog::Read);
+  return this->openDialog(QString("FiberBundleFile"), qSlicerFileDialog::Read);
 }
 
 //------------------------------------------------------------------------------
 bool qSlicerIOManager::openSaveDataDialog()
 {
-  return this->openDialog(qSlicerIO::NoFile, qSlicerFileDialog::Write);
+  return this->openDialog(QString("NoFile"), qSlicerFileDialog::Write);
 }
 
 #endif

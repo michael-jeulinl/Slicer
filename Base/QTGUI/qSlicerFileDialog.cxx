@@ -51,7 +51,7 @@ qSlicerFileDialog::~qSlicerFileDialog()
 }
 
 //-----------------------------------------------------------------------------
-QStringList qSlicerFileDialog::nameFilters(qSlicerIO::IOFileType fileType)
+QStringList qSlicerFileDialog::nameFilters(QString fileType)
 {
   QStringList filters;
   QStringList extensions;
@@ -76,14 +76,14 @@ class qSlicerStandardFileDialogPrivate
 {
 public:
   qSlicerStandardFileDialogPrivate();
-  qSlicerIO::IOFileType       FileType;
+  QString       FileType;
   qSlicerFileDialog::IOAction Action;
 };
 
 //-----------------------------------------------------------------------------
 qSlicerStandardFileDialogPrivate::qSlicerStandardFileDialogPrivate()
 {
-  this->FileType = qSlicerIO::NoFile;
+  this->FileType = QString("NoFile");
   this->Action = qSlicerFileDialog::Read;
 }
 
@@ -100,14 +100,14 @@ qSlicerStandardFileDialog::~qSlicerStandardFileDialog()
 }
 
 //-----------------------------------------------------------------------------
-void qSlicerStandardFileDialog::setFileType(qSlicerIO::IOFileType _fileType)
+void qSlicerStandardFileDialog::setFileType(QString _fileType)
 {
   Q_D(qSlicerStandardFileDialog);
   d->FileType = _fileType;
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerStandardFileDialog::fileType()const
+QString qSlicerStandardFileDialog::fileType()const
 {
   Q_D(const qSlicerStandardFileDialog);
   return d->FileType;
@@ -148,8 +148,7 @@ ctkFileDialog* qSlicerStandardFileDialog::createFileDialog(
   if(ioProperties["fileType"].toBool())
     {
     fileDialog->setNameFilters(
-      qSlicerFileDialog::nameFilters(
-        (qSlicerIO::IOFileType)ioProperties["fileType"].toInt()));
+      qSlicerFileDialog::nameFilters(ioProperties["fileType"].toString()));
     }
   fileDialog->setHistory(ioManager->history());
   if (ioManager->favorites().count())
@@ -185,7 +184,8 @@ bool qSlicerStandardFileDialog::exec(const qSlicerIO::IOProperties& ioProperties
   qSlicerIOManager* ioManager = qSlicerApplication::application()->ioManager();
 
   // warning: we are responsible for the memory of options
-  QStringList fileDescriptions = ioManager->fileDescriptions(this->fileType());
+  QStringList fileDescriptions =
+    ioManager->fileDescriptionsByType(this->fileType());
   qSlicerIOOptions* options = fileDescriptions.count() ?
     ioManager->fileOptions(fileDescriptions[0]) : 0;
   qSlicerIOOptionsWidget* optionsWidget =

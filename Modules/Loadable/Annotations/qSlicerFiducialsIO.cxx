@@ -89,9 +89,9 @@ QString qSlicerFiducialsIO::description()const
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerFiducialsIO::fileType()const
+QString qSlicerFiducialsIO::fileType()const
 {
-  return qSlicerIO::FiducialListFile;
+  return QString("FiducialListFile");
 }
 
 //-----------------------------------------------------------------------------

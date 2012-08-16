@@ -41,31 +41,11 @@ class Q_SLICER_BASE_QTCORE_EXPORT qSlicerIO
   , public qSlicerObject
 {
   Q_OBJECT
-  Q_ENUMS(IOFileType)
+
 public:
   typedef QObject Superclass;
   explicit qSlicerIO(QObject* parent = 0);
   virtual ~qSlicerIO();
-
-  //typedef int IOFileType;
-
-  enum IOFileType
-  {
-    NoFile = 0,
-    SceneFile = 1,
-    VolumeFile = 2,
-    TransformFile = 3,
-    ModelFile = 4,
-    ScalarOverlayFile = 5,
-    ColorTableFile = 7,
-    FiducialListFile = 8,
-    FiberBundleFile = 9,
-    TransferFunctionFile = 10,
-    AnnotationFile = 11,
-    DoubleArrayFile = 12,
-    SceneViewFile = 13,
-    UserFile = 32,
-  };
 
   typedef QVariantMap IOProperties;
 
@@ -73,7 +53,7 @@ public:
   virtual QString description()const = 0;
 
   /// Multiple readers can share the same file type
-  virtual IOFileType fileType()const = 0;
+  virtual QString fileType()const = 0;
 
   /// Returns a list of options for the reader. qSlicerIOOptions can be
   /// derived and have a UI associated to it (i.e. qSlicerIOOptionsWidget).
@@ -85,7 +65,6 @@ private:
   Q_DISABLE_COPY(qSlicerIO);
 };
 
-Q_DECLARE_METATYPE(qSlicerIO::IOFileType)
 Q_DECLARE_METATYPE(qSlicerIO::IOProperties)
 
 #endif

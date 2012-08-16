@@ -75,9 +75,9 @@ QString qSlicerTransformsIO::description()const
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerTransformsIO::fileType()const
+QString qSlicerTransformsIO::fileType()const
 {
-  return qSlicerIO::TransformFile;
+  return QString("TransformFile");
 }
 
 //-----------------------------------------------------------------------------

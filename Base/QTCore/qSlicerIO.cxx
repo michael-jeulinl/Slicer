@@ -25,7 +25,6 @@
 qSlicerIO::qSlicerIO(QObject* parentObject)
   : Superclass(parentObject)
 {
-  qRegisterMetaType<qSlicerIO::IOFileType>("qSlicerIO::IOFileType");
   qRegisterMetaType<qSlicerIO::IOProperties>("qSlicerIO::IOProperties");
 }
 

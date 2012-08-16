@@ -74,9 +74,9 @@ QString qSlicerColorsIO::description()const
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerColorsIO::fileType()const
+QString qSlicerColorsIO::fileType()const
 {
-  return qSlicerIO::ColorTableFile;
+  return QString("ColorTableFile");
 }
 
 //-----------------------------------------------------------------------------

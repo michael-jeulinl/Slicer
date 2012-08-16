@@ -86,9 +86,9 @@ QString qSlicerAnnotationsIO::description()const
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerAnnotationsIO::fileType()const
+QString qSlicerAnnotationsIO::fileType()const
 {
-  return qSlicerIO::AnnotationFile;
+  return QString("AnnotationFile");
 }
 
 //-----------------------------------------------------------------------------

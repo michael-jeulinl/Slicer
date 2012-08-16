@@ -43,8 +43,8 @@ public:
   virtual ~qSlicerSceneIO();
   
   virtual QString description()const;
-  /// Support qSlicerIO::SceneFile
-  virtual qSlicerIO::IOFileType fileType()const;
+  /// Support QString("SceneFile")
+  virtual QString fileType()const;
 
   /// Support only .mrml files
   virtual QStringList extensions()const;

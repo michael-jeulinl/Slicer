@@ -41,19 +41,19 @@
 class qSlicerDummyFileWriter: public qSlicerFileWriter
 {
 public:
-  qSlicerDummyFileWriter(qSlicerIO::IOFileType fileType, QObject* parent = 0)
+  qSlicerDummyFileWriter(QString fileType, QObject* parent = 0)
     : qSlicerFileWriter(parent)
     , FileType(fileType)
     {}
   virtual ~qSlicerDummyFileWriter(){}
   virtual QStringList nodeTags()const {return QStringList() << "LinearTransform";}
   virtual QString description()const{return "Dummy";}
-  virtual qSlicerIO::IOFileType fileType()const{return this->FileType;}
+  virtual QString fileType()const{return this->FileType;}
   virtual QStringList extensions(vtkObject*)const{return QStringList(QString("MyType(*.mhd *.vtk)"));}
 
   virtual bool write(const IOProperties& properties);
 
-  qSlicerIO::IOFileType FileType;
+  QString FileType;
 };
 
 //-----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ bool qSlicerDummyFileWriter::write(const IOProperties& properties)
 int qSlicerSaveDataDialogCustomFileWriterTest(int argc, char * argv[] )
 {
   qSlicerApplication app(argc, argv);
-  app.coreIOManager()->registerIO(new qSlicerDummyFileWriter(qSlicerIO::TransformFile, 0));
+  app.coreIOManager()->registerIO(new qSlicerDummyFileWriter(QString("TransformFile"), 0));
 
   vtkNew<vtkMRMLTransformStorageNode> storageNode;
   app.mrmlScene()->AddNode(storageNode.GetPointer());

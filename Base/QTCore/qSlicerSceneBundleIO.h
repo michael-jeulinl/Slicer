@@ -39,8 +39,8 @@ public:
   qSlicerSceneBundleIO(QObject* _parent = 0);
 
   virtual QString description()const;
-  /// Support qSlicerIO::SceneFile
-  virtual qSlicerIO::IOFileType fileType()const;
+  /// Support QString("SceneFile")
+  virtual QString fileType()const;
 
   /// Support only .mrb files
   virtual QStringList extensions()const;

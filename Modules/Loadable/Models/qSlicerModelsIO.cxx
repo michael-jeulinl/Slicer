@@ -75,9 +75,9 @@ QString qSlicerModelsIO::description()const
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerModelsIO::fileType()const
+QString qSlicerModelsIO::fileType()const
 {
-  return qSlicerIO::ModelFile;
+  return QString("ModelFile");
 }
 
 //-----------------------------------------------------------------------------

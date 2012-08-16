@@ -37,7 +37,7 @@ public:
   virtual ~qSlicerSceneWriter();
 
   virtual QString description()const;
-  virtual IOFileType fileType()const;
+  virtual QString fileType()const;
 
   /// Return true if the object is handled by the writer.
   virtual bool canWriteObject(vtkObject* object)const;

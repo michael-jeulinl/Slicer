@@ -848,7 +848,7 @@ void qSlicerCoreApplication::handleCommandLineArguments()
       if (file.exists())
         {
         qSlicerCoreIOManager* ioManager =this->coreIOManager();
-        qSlicerIO::IOFileType fileType = ioManager->fileType(fileName);
+        QString fileType = ioManager->fileType(fileName);
         qSlicerIO::IOProperties fileProperties;
         fileProperties.insert("fileName", fileName);
         ioManager->loadNodes(fileType, fileProperties);

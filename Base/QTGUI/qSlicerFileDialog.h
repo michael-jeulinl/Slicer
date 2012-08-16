@@ -45,7 +45,7 @@ public:
   qSlicerFileDialog(QObject* parent =0);
   virtual ~qSlicerFileDialog();
 
-  virtual qSlicerIO::IOFileType fileType()const = 0;
+  virtual QString fileType()const = 0;
   enum IOAction
   {
     Read,
@@ -60,8 +60,8 @@ public:
   /// TBD: move in qSlicerCoreIOManager or qSlicerIOManager ?
   /// Return the namefilters of all the readers in IOManager corresponding to
   /// fileType
-  static QStringList nameFilters(qSlicerIO::IOFileType fileType =
-                                 qSlicerIO::NoFile);
+  static QStringList nameFilters(QString fileType =
+                                 QString("NoFile"));
 
 //private:
 //  Q_DECLARE_PRIVATE(qSlicerFileDialog);
@@ -79,8 +79,8 @@ public:
   qSlicerStandardFileDialog(QObject* parent=0);
   virtual ~qSlicerStandardFileDialog();
 
-  void setFileType(qSlicerIO::IOFileType fileType);
-  virtual qSlicerIO::IOFileType fileType()const;
+  void setFileType(QString fileType);
+  virtual QString fileType()const;
 
   void setAction(qSlicerFileDialog::IOAction dialogAction);
   virtual qSlicerFileDialog::IOAction action()const;

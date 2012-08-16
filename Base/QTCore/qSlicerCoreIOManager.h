@@ -50,18 +50,18 @@ public:
   virtual ~qSlicerCoreIOManager();
 
   /// Return the file type associated with a \a file
-  Q_INVOKABLE qSlicerIO::IOFileType fileType(const QString& file)const;
-  Q_INVOKABLE QList<qSlicerIO::IOFileType> fileTypes(const QString& file)const;
-  Q_INVOKABLE qSlicerIO::IOFileType fileTypeFromDescription(const QString& fileDescription)const;
+  Q_INVOKABLE QString fileType(const QString& file)const;
+  Q_INVOKABLE QList<QString> fileTypes(const QString& file)const;
+  Q_INVOKABLE QString fileTypeFromDescription(const QString& fileDescription)const;
 
   /// Return the file description associated with a \a file
   /// Usually the description is a short text of one or two words
   /// e.g. Volume, Model, ...
   QStringList fileDescriptions(const QString& file)const;
-  QStringList fileDescriptions(const qSlicerIO::IOFileType fileType)const;
+  QStringList fileDescriptionsByType(const QString& fileType)const;
 
-  Q_INVOKABLE qSlicerIO::IOFileType fileWriterFileType(vtkObject* object)const;
-  QStringList fileWriterDescriptions(const qSlicerIO::IOFileType& fileType)const;
+  Q_INVOKABLE QString fileWriterFileType(vtkObject* object)const;
+  QStringList fileWriterDescriptions(const QString& fileType)const;
   QStringList fileWriterExtensions(vtkObject* object)const;
 
   /// Return the file option associated with a \a file type
@@ -77,13 +77,13 @@ public:
   /// More specific parameters could also be set. For example, the volume reader qSlicerVolumesIO
   /// could also be called with the following parameters: LabelMap (bool), Center (bool)
   /// \note Make also sure the case of parameter name is respected
-  /// \sa qSlicerIO::IOProperties, qSlicerIO::IOFileType
+  /// \sa qSlicerIO::IOProperties, QString
 #if QT_VERSION < 0x040700
-  Q_INVOKABLE virtual bool loadNodes(const qSlicerIO::IOFileType& fileType,
+  Q_INVOKABLE virtual bool loadNodes(const QString& fileType,
                                      const QVariantMap& parameters,
                                      vtkCollection* loadedNodes = 0);
 #else
-  Q_INVOKABLE virtual bool loadNodes(const qSlicerIO::IOFileType& fileType,
+  Q_INVOKABLE virtual bool loadNodes(const QString& fileType,
                                      const qSlicerIO::IOProperties& parameters,
                                      vtkCollection* loadedNodes = 0);
 #endif
@@ -96,19 +96,19 @@ public:
   /// Load a list of node corresponding to \a fileType and return the first loaded node.
   /// This function is provided for convenience and is equivalent to call loadNodes
   /// with a vtkCollection parameter and retrieve the first element.
-  vtkMRMLNode* loadNodesAndGetFirst(qSlicerIO::IOFileType fileType,
+  vtkMRMLNode* loadNodesAndGetFirst(QString fileType,
                                     const qSlicerIO::IOProperties& parameters);
    
 
   /// Load/import a scene corresponding to \a fileName
   /// This function is provided for convenience and is equivalent to call
-  /// loadNodes function with qSlicerIO::SceneFile
+  /// loadNodes function with QString("SceneFile")
   bool loadScene(const QString& fileName, bool clear = true);
 
   /// Attributes are typically:
   /// All: fileName[s] 
   /// Volume: LabelMap:bool, Center:bool, fileNames:QList<QString>...
-  bool saveNodes(qSlicerIO::IOFileType fileType,
+  bool saveNodes(QString fileType,
                  const qSlicerIO::IOProperties& parameters);
 
   /// Register the reader/writer \a io
@@ -118,7 +118,7 @@ public:
 signals:
 
   /// This signal is emitted each time a file is loaded using loadNodes()
-  /// \sa loadNodes(const qSlicerIO::IOFileType&, const qSlicerIO::IOProperties&, vtkCollection*)
+  /// \sa loadNodes(const QString&, const qSlicerIO::IOProperties&, vtkCollection*)
   void newFileLoaded(const qSlicerIO::IOProperties& parametersWithFileType);
 
 protected:
@@ -129,10 +129,10 @@ protected:
   /// Returns the list of registered writers
   const QList<qSlicerFileWriter*>& writers()const;
   /// Returns the list of registered writers for a given fileType
-  QList<qSlicerFileWriter*> writers(const qSlicerIO::IOFileType& fileType)const;
+  QList<qSlicerFileWriter*> writers(const QString& fileType)const;
 
   /// Returns the list of registered readers or writers associated with \a fileType
-  QList<qSlicerFileReader*> readers(const qSlicerIO::IOFileType& fileType)const;
+  QList<qSlicerFileReader*> readers(const QString& fileType)const;
   qSlicerFileReader* reader(const QString& ioDescription)const;
 
 protected:

@@ -39,14 +39,14 @@ class qSlicerNodeWriterPrivate
 {
 public:
   QString Description;
-  qSlicerIO::IOFileType FileType;
+  QString FileType;
   QStringList NodeClassNames;
   bool SupportUseCompression;
 };
 
 //----------------------------------------------------------------------------
 qSlicerNodeWriter::qSlicerNodeWriter(const QString& description,
-                                     const qSlicerIO::IOFileType& fileIO,
+                                     const QString& fileIO,
                                      const QStringList& nodeClassNames,
                                      bool supportUseCompression,
                                      QObject* parentObject)
@@ -73,7 +73,7 @@ QString qSlicerNodeWriter::description()const
 }
 
 //----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerNodeWriter::fileType()const
+QString qSlicerNodeWriter::fileType()const
 {
   Q_D(const qSlicerNodeWriter);
   return d->FileType;

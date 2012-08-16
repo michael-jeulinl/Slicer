@@ -64,9 +64,9 @@ QString qSlicerSceneWriter::description()const
 }
 
 //----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerSceneWriter::fileType()const
+QString qSlicerSceneWriter::fileType()const
 {
-  return qSlicerIO::SceneFile;
+  return QString("SceneFile");
 }
 
 //----------------------------------------------------------------------------

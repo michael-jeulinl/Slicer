@@ -43,7 +43,7 @@ public:
   void setApplicationLogic(vtkSlicerApplicationLogic* logic);
 
   virtual QString description()const;
-  virtual IOFileType fileType()const;
+  virtual QString fileType()const;
   virtual QStringList extensions()const;
 
   virtual bool load(const IOProperties& properties);

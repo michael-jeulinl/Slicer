@@ -38,14 +38,14 @@ public:
   void stopProgressDialog();
   void readSettings();
   void writeSettings();
-  QString createUniqueDialogName(qSlicerIO::IOFileType,
+  QString createUniqueDialogName(QString,
                                  qSlicerFileDialog::IOAction,
                                  const qSlicerIO::IOProperties&);
 
   QStringList                   History;
   QList<QUrl>                   Favorites;
-  QMap<int, qSlicerFileDialog*> ReadDialogs;
-  QMap<int, qSlicerFileDialog*> WriteDialogs;
+  QMap<QString, qSlicerFileDialog*> ReadDialogs;
+  QMap<QString, qSlicerFileDialog*> WriteDialogs;
 
   QSharedPointer<ctkScreenshotDialog> ScreenshotDialog;
   QProgressDialog*              ProgressDialog;
@@ -143,16 +143,14 @@ void qSlicerIOManagerPrivate::writeSettings()
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerIOManagerPrivate::createUniqueDialogName(qSlicerIO::IOFileType fileType,
+QString qSlicerIOManagerPrivate::createUniqueDialogName(QString fileType,
                                                         qSlicerFileDialog::IOAction action,
                                                         const qSlicerIO::IOProperties& ioProperties)
 {
   QString objectName;
 
   objectName += action == qSlicerFileDialog::Read ? "Add" : "Save";
-  int propIndex = qSlicerIO::staticMetaObject.indexOfEnumerator("IOFileType");
-  QMetaEnum widgetTypeEnum = qSlicerIO::staticMetaObject.enumerator(propIndex);
-  objectName += widgetTypeEnum.valueToKey(fileType);
+  objectName += fileType;
   objectName += ioProperties["multipleFiles"].toBool() ? "s" : "";
   objectName += "Dialog";
 
@@ -182,7 +180,7 @@ bool qSlicerIOManager::openLoadSceneDialog()
 {
   qSlicerIO::IOProperties properties;
   properties["clear"] = true;
-  return this->openDialog(qSlicerIO::SceneFile, qSlicerFileDialog::Read, properties);
+  return this->openDialog(QString("SceneFile"), qSlicerFileDialog::Read, properties);
 }
 
 //-----------------------------------------------------------------------------
@@ -190,11 +188,11 @@ bool qSlicerIOManager::openAddSceneDialog()
 {
   qSlicerIO::IOProperties properties;
   properties["clear"] = false;
-  return this->openDialog(qSlicerIO::SceneFile, qSlicerFileDialog::Read, properties);
+  return this->openDialog(QString("SceneFile"), qSlicerFileDialog::Read, properties);
 }
 
 //-----------------------------------------------------------------------------
-bool qSlicerIOManager::openDialog(qSlicerIO::IOFileType fileType, 
+bool qSlicerIOManager::openDialog(QString fileType,
                                   qSlicerFileDialog::IOAction action,
                                   qSlicerIO::IOProperties properties)
 {
@@ -205,8 +203,10 @@ bool qSlicerIOManager::openDialog(qSlicerIO::IOFileType fileType,
     QString name = d->createUniqueDialogName(fileType, action, properties);
     properties["objectName"] = name;
     }
-  qSlicerFileDialog* dialog = action == qSlicerFileDialog::Read ? 
+
+  qSlicerFileDialog* dialog = action == qSlicerFileDialog::Read ?
     d->ReadDialogs[fileType] : d->WriteDialogs[fileType];
+
   if (dialog == 0)
     {
     deleteDialog = true;
@@ -304,7 +304,7 @@ void qSlicerIOManager::registerDialog(qSlicerFileDialog* dialog)
 }
 
 //-----------------------------------------------------------------------------
-bool qSlicerIOManager::loadNodes(const qSlicerIO::IOFileType& fileType,
+bool qSlicerIOManager::loadNodes(const QString& fileType,
                                  const qSlicerIO::IOProperties& parameters,
                                  vtkCollection* loadedNodes)
 {
@@ -337,8 +337,7 @@ bool qSlicerIOManager::loadNodes(const QList<qSlicerIO::IOProperties>& files,
   bool res = true;
   foreach(qSlicerIO::IOProperties fileProperties, files)
     {
-    res = this->loadNodes(static_cast<qSlicerIO::IOFileType>(
-                            fileProperties["fileType"].toInt()),
+    res = this->loadNodes(fileProperties["fileType"].toString(),
                           fileProperties, loadedNodes)
       && res;
     this->updateProgressDialog();

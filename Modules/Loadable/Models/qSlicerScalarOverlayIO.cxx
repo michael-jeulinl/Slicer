@@ -77,9 +77,9 @@ QString qSlicerScalarOverlayIO::description()const
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerScalarOverlayIO::fileType()const
+QString qSlicerScalarOverlayIO::fileType()const
 {
-  return qSlicerIO::ScalarOverlayFile;
+  return QString("ScalarOverlayFile");
 }
 
 //-----------------------------------------------------------------------------

@@ -36,7 +36,7 @@ class Q_SLICER_BASE_QTGUI_EXPORT qSlicerNodeWriter
 public:
   typedef qSlicerFileWriter Superclass;
   qSlicerNodeWriter(const QString& description,
-                    const qSlicerIO::IOFileType& fileType,
+                    const QString& fileType,
                     const QStringList& nodeTags,
                     bool useCompression = true,
                     QObject* parent = 0);
@@ -47,7 +47,7 @@ public:
   bool supportUseCompression()const;
 
   virtual QString description()const;
-  virtual IOFileType fileType()const;
+  virtual QString fileType()const;
 
   /// Return true if the object is handled by the writer.
   virtual bool canWriteObject(vtkObject* object)const;

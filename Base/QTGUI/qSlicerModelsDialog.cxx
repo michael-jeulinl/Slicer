@@ -104,9 +104,9 @@ qSlicerModelsDialog::~qSlicerModelsDialog()
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerModelsDialog::fileType()const
+QString qSlicerModelsDialog::fileType()const
 {
-  return qSlicerIO::ModelFile;
+  return QString("ModelFile");
 }
 
 //-----------------------------------------------------------------------------
